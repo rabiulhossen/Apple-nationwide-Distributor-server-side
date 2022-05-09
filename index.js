@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 
 const app = express();
@@ -26,11 +26,29 @@ async function run (){
 
 try{
 await client.connect();
-const userCollection = client.db("warehouse").collection("user");
+const userCollection = client.db("appleDistributor").collection("product");
+
+app.get("/inventory",async (req,res)=>{
+
+    const query ={};
+    const cursor = userCollection.find(query);
+    const product = await cursor.toArray();
+     res.send(product);
+});
+
+app.get('/inventory/:_id', async(req,res) =>{
+    const _id= req.params._id;
+    const query ={_id:ObjectId(_id)}
+    const products =await userCollection.findOne(query);
+    res.send(products)
+
+})
+
+
 
 
 // post 
-app.post("/addnewitem",async(req,res)=>{
+app.post("/inventory",async(req,res)=>{
     const newUser =req.body;
     console.log("new user",newUser);
     const result =await userCollection.insertOne(newUser);
