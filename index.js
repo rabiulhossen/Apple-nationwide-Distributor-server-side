@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion } = require('mongodb');
-
+require('dotenv').config();
 
 const app = express();
 
@@ -16,12 +16,26 @@ app.get('/', (req, res) => {
 });
 
 
-const uri = "mongodb+srv://Rabiulhossen:<password>@cluster0.ea2zl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.USER_RABIUL}:${process.env.USER_PASS}@cluster0.ea2zl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+
+
+
 async function run (){
+
+
 try{
 await client.connect();
-const userCollection = client.db("warehouse").collection("user")
+const userCollection = client.db("warehouse").collection("user");
+
+
+// post 
+app.post("/addnewitem",async(req,res)=>{
+    const newUser =req.body;
+    console.log("new user",newUser);
+    const result =await userCollection.insertOne(newUser);
+    res.send(result);
+})
 }
 
 finally{
