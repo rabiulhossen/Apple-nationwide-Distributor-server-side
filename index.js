@@ -54,6 +54,13 @@ app.post("/inventory",async(req,res)=>{
     const result =await userCollection.insertOne(newUser);
     res.send(result);
 })
+
+app.delete('inventory/:_id', async(req,res)=>{
+    const _id = req.params._id;
+    const query ={_id:ObjectId(_id)};
+    const result = await userCollection.deleteOne(query);
+    res.send(result);
+})
 }
 
 finally{
