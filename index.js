@@ -28,7 +28,7 @@ try{
 await client.connect();
 const userCollection = client.db("appleDistributor").collection("product");
 
-app.get("/inventory",async (req,res)=>{
+app.get('/inventory',async (req,res)=>{
 
     const query ={};
     const cursor = userCollection.find(query);
@@ -36,9 +36,10 @@ app.get("/inventory",async (req,res)=>{
      res.send(product);
 });
 
-app.get('/inventory/:_id', async(req,res) =>{
-    const _id= req.params._id;
-    const query ={_id:ObjectId(_id)}
+app.get('/inventory/:id', async(req,res) =>{
+    const id= req.params._id;
+    console.log(_id);
+    const query ={_id:ObjectId(id)}
     const products =await userCollection.findOne(query);
     res.send(products)
 
@@ -48,18 +49,23 @@ app.get('/inventory/:_id', async(req,res) =>{
 
 
 // post 
-app.post("/inventory",async(req,res)=>{
+app.post('/inventory',async(req,res)=>{
     const newUser =req.body;
     console.log("new user",newUser);
     const result =await userCollection.insertOne(newUser);
     res.send(result);
 })
 
-app.delete('inventory/:_id', async(req,res)=>{
-    const _id = req.params._id;
-    const query ={_id:ObjectId(_id)};
+app.delete('/inventory/:id', async(req,res)=>{
+   
+    const id = req.params.id;
+  
+    const query ={_id:ObjectId(id)};
     const result = await userCollection.deleteOne(query);
     res.send(result);
+   
+
+
 })
 }
 
