@@ -37,13 +37,14 @@ app.get('/inventory',async (req,res)=>{
 });
 
 app.get('/inventory/:id', async(req,res) =>{
-    const id= req.params._id;
-    console.log(_id);
+    const id= req.params.id;
+    console.log(id);
     const query ={_id:ObjectId(id)}
     const products =await userCollection.findOne(query);
     res.send(products)
 
 })
+
 
 
 
@@ -56,6 +57,8 @@ app.post('/inventory',async(req,res)=>{
     res.send(result);
 })
 
+
+// Delete 
 app.delete('/inventory/:id', async(req,res)=>{
    
     const id = req.params.id;
@@ -64,9 +67,16 @@ app.delete('/inventory/:id', async(req,res)=>{
     const result = await userCollection.deleteOne(query);
     res.send(result);
    
-
-
 })
+
+// update 
+app.put('/inventory/:id', async(req,res)=>{
+    const id = req.params.id;
+const query = {_id:ObjectId(id)};
+const result = await userCollection.updateOne(query)
+res.send(result);
+});
+
 }
 
 finally{
