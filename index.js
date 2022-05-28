@@ -1,13 +1,16 @@
+require('dotenv').config();
 const express = require('express');
+
 const cors = require('cors');
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-require('dotenv').config();
 
 const app = express();
 
 // middleware
-app.use(cors());
+app.use(cors({
+    origin:"https://apple-nationwide-distributor.web.app"
+}));
 app.use(express.json());
 
 
@@ -37,12 +40,12 @@ app.get('/inventory',async (req,res)=>{
 });
 
 app.get('/inventory/:id', async(req,res) =>{
-    const id= req.params.id;
+    const id=req.params.id;
     console.log(id);
     const query ={_id:ObjectId(id)}
     const products =await userCollection.findOne(query);
     res.send(products)
-
+   
 })
 
 
@@ -72,8 +75,9 @@ app.delete('/inventory/:id', async(req,res)=>{
 // update 
 app.put('/inventory/:id', async(req,res)=>{
     const id = req.params.id;
+    const {Quantity} =req.body;
 const query = {_id:ObjectId(id)};
-const result = await userCollection.updateOne(query)
+const result = await userCollection.updateOne(query,{ $set:{Quantity}});
 res.send(result);
 });
 
